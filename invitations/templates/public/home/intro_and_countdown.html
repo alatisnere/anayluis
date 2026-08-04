@@ -1,0 +1,115 @@
+{% load static %}
+
+<section class="relative overflow-hidden">
+    <div class="paper-leaves-right"></div>
+
+    <div class="bg-brand-cream">
+        <div class="relative mx-auto max-w-5xl px-4 sm:px-6 py-16 sm:py-20">
+            <div class="flex justify-center">
+                <img
+                        src="{% static 'invitations/images/texts/welcome.webp' %}"
+                        alt="Mensaje de bienvenida"
+                        class="w-[95%] sm:w-[90%] md:w-[95%] lg:w-[90%] max-w-6xl opacity-90 select-none"
+                        loading="eager"
+                        fetchpriority="high"
+                        decoding="async"
+                        data-critical="true"
+                />
+            </div>
+        </div>
+    </div>
+
+    <div class="relative overflow-hidden">
+        <div class="absolute inset-0 bg-paper"></div>
+        <div class="absolute inset-0 bg-countdown-linen"></div>
+
+        <div class="relative mx-auto max-w-6xl px-4 sm:px-6 py-8 sm:py-20 text-center">
+            <div class="title-box mb-10 reveal">
+                <img
+                        src="{% static 'invitations/images/titles/countdown.webp' %}"
+                        alt="Countdown"
+                        class="title-img opacity-90 select-none"
+                        style="--title-scale: 0.60;"
+                />
+            </div>
+
+            <div
+                    class="mt-8 sm:mt-14 grid grid-cols-4 gap-2 sm:gap-14
+                       justify-center text-brand-tan/90 reveal"
+                    data-delay="120"
+            >
+                <div class="flex flex-col items-center">
+                    <div
+                            id="cd-days"
+                            class="font-seasons font-light text-lg sm:text-5xl
+                               leading-none text-center tracking-wide"
+                            style="font-variant-numeric: tabular-nums;"
+                    >
+                        00
+                    </div>
+                    <div class="mt-1 h-2.5 sm:h-4.5 md:h-[20px] flex items-end justify-center">
+                        <img
+                                src="{% static 'invitations/images/texts/countdown_days.webp' %}"
+                                alt="Días"
+                                class="max-h-full opacity-95 select-none"
+                        />
+                    </div>
+                </div>
+
+                <div class="flex flex-col items-center">
+                    <div
+                            id="cd-hrs"
+                            class="font-seasons font-light text-lg sm:text-5xl
+                               leading-none text-center tracking-wide"
+                            style="font-variant-numeric: tabular-nums;"
+                    >
+                        00
+                    </div>
+                    <div class="mt-1 h-2.5 sm:h-4.5 md:h-[20px] flex items-end justify-center">
+                        <img
+                                src="{% static 'invitations/images/texts/countdown_hours.webp' %}"
+                                alt="Horas"
+                                class="max-h-full opacity-95 select-none"
+                        />
+                    </div>
+                </div>
+
+                <div class="flex flex-col items-center">
+                    <div
+                            id="cd-min"
+                            class="font-seasons font-light text-lg sm:text-5xl
+                               leading-none text-center tracking-wide"
+                            style="font-variant-numeric: tabular-nums;"
+                    >
+                        00
+                    </div>
+                    <div class="mt-1 h-2.5 sm:h-4.5 md:h-[20px] flex items-end justify-center">
+                        <img
+                                src="{% static 'invitations/images/texts/countdown_min.webp' %}"
+                                alt="Minutos"
+                                class="max-h-full opacity-95 select-none"
+                        />
+                    </div>
+                </div>
+
+                <div class="flex flex-col items-center">
+                    <div
+                            id="cd-sec"
+                            class="font-seasons font-light text-lg sm:text-5xl
+                               leading-none text-center tracking-wide"
+                            style="font-variant-numeric: tabular-nums;"
+                    >
+                        00
+                    </div>
+                    <div class="mt-1 h-2.5 sm:h-4.5 md:h-[20px] flex items-end justify-center">
+                        <img
+                                src="{% static 'invitations/images/texts/countdown_seg.webp' %}"
+                                alt="Segundos"
+                                class="max-h-full opacity-95 select-none"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

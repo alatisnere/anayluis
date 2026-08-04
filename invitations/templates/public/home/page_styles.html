@@ -1,0 +1,204 @@
+{% load static %}
+
+<style>
+    body.menu-open {
+        overflow: hidden;
+    }
+
+    .title-box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: clamp(52px, 9vw, 72px);
+    }
+
+    @media (min-width: 640px) {
+        .title-box {
+            height: 92px;
+        }
+    }
+
+    .title-img {
+        height: 100%;
+        width: auto;
+        max-width: 92vw;
+        object-fit: contain;
+        transform: scale(var(--title-scale, 1));
+        transform-origin: center center;
+    }
+
+    #rsvp .title-img {
+        transform: scale(0.95);
+    }
+
+    @media (min-width: 640px) {
+        #rsvp .title-img {
+            transform: scale(var(--title-scale, 1));
+        }
+    }
+
+    .hotel-title {
+        height: 48px;
+        width: min(72vw, 300px);
+        object-fit: contain;
+    }
+
+    @media (min-width: 640px) {
+        .hotel-title {
+            height: 64px;
+            width: 320px;
+        }
+    }
+
+    .bg-embosed-flowers-texture {
+        background-color: #fbf9f6;
+        background-image: url("{% static 'invitations/images/textures/textura_1.webp' %}");
+        background-size: cover;
+        background-position: center;
+    }
+
+    .bg-blue-texture {
+        background-color: #fbf9f6;
+        background-image: url("{% static 'invitations/images/textures/textura_2.webp' %}");
+        background-size: cover;
+        background-position: center;
+    }
+
+    .bg-paper {
+        background-color: #fbf9f6;
+        background-image: url("{% static 'invitations/images/textures/textura_3.webp' %}");
+        background-size: cover;
+        background-position: center;
+        opacity: 0.75;
+    }
+
+    .bg-countdown-linen {
+        background-image: url("{% static 'invitations/images/textures/textura_3.webp' %}");
+        background-size: cover;
+        background-position: center;
+        opacity: 0.55;
+    }
+
+    .paper-leaves-right {
+        pointer-events: none;
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        background-image: url("{% static 'invitations/images/textures/shadow_leaves.webp' %}");
+        background-repeat: no-repeat;
+        background-position: right center;
+        background-size: contain;
+        opacity: 0.6;
+        filter: contrast(1.2);
+    }
+
+    .paper-leaves-right--strong {
+        opacity: 0.3;
+    }
+
+    .paper-leaves-left {
+        pointer-events: none;
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        background-image: url("{% static 'invitations/images/textures/shadow_leaves_2.webp' %}");
+        background-repeat: no-repeat;
+        background-position: left top;
+        background-size: contain;
+        opacity: 0.6;
+    }
+
+    @media (max-width: 768px) {
+        .paper-leaves-left,
+        .paper-leaves-right {
+            opacity: 0.28;
+            filter: blur(1.5px);
+            background-size: cover;
+        }
+
+        #itinerario .paper-leaves-left {
+            opacity: 0.22;
+        }
+    }
+
+    @media (max-width: 768px) {
+        #itinerario .paper-leaves-left {
+            background-image:
+                url("{% static 'invitations/images/textures/shadow_leaves_2.webp' %}"),
+                url("{% static 'invitations/images/textures/shadow_leaves_2.webp' %}");
+            background-repeat: no-repeat, no-repeat;
+            background-position: left top, left bottom;
+            background-size: cover, cover;
+        }
+    }
+
+    .reveal {
+        opacity: 0;
+        transform: translate3d(0, 12px, 0);
+        transition: opacity 600ms ease, transform 600ms ease;
+        will-change: opacity, transform;
+    }
+
+    .reveal.is-revealed {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .reveal {
+            opacity: 1 !important;
+            transform: none !important;
+            transition: none !important;
+        }
+    }
+</style>
+
+<script>
+    (function () {
+        if (
+            window.matchMedia &&
+            window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ) {
+            document
+                .querySelectorAll(".reveal")
+                .forEach((el) => el.classList.add("is-revealed"));
+            return;
+        }
+
+        const revealEls = document.querySelectorAll(".reveal");
+        if (!revealEls.length) return;
+
+        if (!("IntersectionObserver" in window)) {
+            revealEls.forEach((el) => el.classList.add("is-revealed"));
+            return;
+        }
+
+        const io = new IntersectionObserver(
+            (entries, observer) => {
+                entries.forEach((entry) => {
+                    if (!entry.isIntersecting) return;
+
+                    const el = entry.target;
+                    const delay = parseInt(
+                        el.getAttribute("data-delay") || "0",
+                        10
+                    );
+
+                    if (delay > 0) {
+                        el.style.transitionDelay = `${delay}ms`;
+                    }
+
+                    el.classList.add("is-revealed");
+                    observer.unobserve(el);
+                });
+            },
+            {
+                root: null,
+                threshold: 0.12,
+                rootMargin: "0px 0px -10% 0px",
+            }
+        );
+
+        revealEls.forEach((el) => io.observe(el));
+    })();
+</script>

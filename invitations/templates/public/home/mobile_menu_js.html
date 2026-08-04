@@ -1,0 +1,74 @@
+<script>
+    (function () {
+      const btn = document.getElementById("mobileMenuBtn");
+      const closeBtn = document.getElementById("mobileMenuCloseBtn");
+      const menu = document.getElementById("mobileMenu");
+      const backdrop = document.getElementById("mobileMenuBackdrop");
+      const panel = document.getElementById("mobileMenuPanel");
+
+      if (!btn || !closeBtn || !menu || !backdrop || !panel) return;
+
+      const lockScroll = () => {
+        document.documentElement.classList.add("menu-open");
+        document.body.classList.add("menu-open");
+      };
+
+      const unlockScroll = () => {
+        document.documentElement.classList.remove("menu-open");
+        document.body.classList.remove("menu-open");
+      };
+
+      function openMenu() {
+        menu.classList.remove("hidden");
+
+        // Ensure we start from hidden opacity (robust across Tailwind class ordering)
+        backdrop.classList.add("opacity-0");
+        panel.classList.add("opacity-0");
+        backdrop.classList.remove("opacity-100");
+        panel.classList.remove("opacity-100");
+
+        // Fade in on next paint
+        requestAnimationFrame(() => {
+          backdrop.classList.remove("opacity-0");
+          panel.classList.remove("opacity-0");
+          backdrop.classList.add("opacity-100");
+          panel.classList.add("opacity-100");
+        });
+
+        btn.setAttribute("aria-expanded", "true");
+        lockScroll();
+      }
+
+      function closeMenu() {
+        backdrop.classList.remove("opacity-100");
+        panel.classList.remove("opacity-100");
+        backdrop.classList.add("opacity-0");
+        panel.classList.add("opacity-0");
+
+        btn.setAttribute("aria-expanded", "false");
+        unlockScroll();
+
+        window.setTimeout(() => {
+          menu.classList.add("hidden");
+        }, 200);
+      }
+
+      btn.addEventListener("click", openMenu);
+      closeBtn.addEventListener("click", closeMenu);
+      backdrop.addEventListener("click", closeMenu);
+
+      // Close when clicking a menu link
+      menu.querySelectorAll("[data-close-menu]").forEach((el) => {
+        el.addEventListener("click", () => {
+          closeMenu();
+        });
+      });
+
+      // Close with Escape on desktop
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && !menu.classList.contains("hidden")) {
+          closeMenu();
+        }
+      });
+    })();
+</script>

@@ -1,0 +1,102 @@
+<script>
+    (() => {
+      const loaderEl = document.getElementById("page-loader");
+      if (!loaderEl) return;
+
+      const TIMEOUT_MS = 4000;
+      const MIN_SHOW_MS = 250;
+      const startTs = performance.now();
+      let finished = false;
+
+      const lockScroll = () => {
+        document.documentElement.classList.add("loader-open");
+        document.body.classList.add("loader-open");
+      };
+      const unlockScroll = () => {
+        document.documentElement.classList.remove("loader-open");
+        document.body.classList.remove("loader-open");
+
+        // If the mobile menu is open, keep scroll locked.
+        if (document.documentElement.classList.contains("menu-open")) {
+          document.documentElement.classList.add("menu-open");
+          document.body.classList.add("menu-open");
+        }
+      };
+
+      lockScroll();
+
+      function fadeOutAndRemove() {
+        if (finished) return;
+        finished = true;
+
+        const elapsed = performance.now() - startTs;
+        const remaining = Math.max(0, MIN_SHOW_MS - elapsed);
+
+        setTimeout(() => {
+          loaderEl.classList.add("opacity-0", "is-hidden");
+          loaderEl.setAttribute("aria-hidden", "true");
+
+          const remove = () => {
+            loaderEl.removeEventListener("transitionend", remove);
+            loaderEl.remove();
+            unlockScroll();
+          };
+
+          loaderEl.addEventListener("transitionend", remove);
+          setTimeout(remove, 800);
+        }, remaining);
+      }
+
+      function waitForImage(img) {
+        if (!img) return Promise.resolve();
+
+        const decode = () => {
+          if (typeof img.decode === "function") return img.decode().catch(() => {});
+          return Promise.resolve();
+        };
+
+        if (img.complete && img.naturalWidth > 0) return decode();
+
+        return new Promise((resolve) => {
+          img.addEventListener("load", () => decode().finally(resolve), { once: true });
+          img.addEventListener("error", resolve, { once: true });
+        });
+      }
+
+      function preloadBg(url) {
+        if (!url) return Promise.resolve();
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.onload = () => resolve();
+          img.onerror = () => resolve();
+          img.src = url;
+        });
+      }
+
+      async function run() {
+        const imgs = Array.from(document.querySelectorAll('img[data-critical="true"]'));
+
+        const bgUrls = Array.from(document.querySelectorAll("[data-bg-critical]"))
+          .map(el => el.getAttribute("data-bg-critical"))
+          .filter(Boolean);
+
+        const timeout = new Promise((r) => setTimeout(r, TIMEOUT_MS));
+        const work = Promise.all([
+          ...imgs.map(waitForImage),
+          ...bgUrls.map(preloadBg),
+        ]);
+
+        await Promise.race([work, timeout]);
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(fadeOutAndRemove);
+        });
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", run, { once: true });
+      } else {
+        run();
+      }
+    })();
+</script>

@@ -1,0 +1,193 @@
+{% load static %}
+<header
+        id="inicio"
+        class="relative scroll-mt-28 w-full
+           aspect-[21/9] min-h-[240px] sm:min-h-[320px]
+           bg-black"
+>
+    <!-- Background images (keep overflow hidden here, NOT on the header) -->
+    <div class="absolute inset-0 grid grid-cols-3 z-0 overflow-hidden">
+        <div class="overflow-hidden">
+            <img
+                    src="{% static 'invitations/images/hero/hero_left.webp' %}"
+                    alt="Foto 1"
+                    class="block h-full w-full object-cover object-center"
+                    loading="eager"
+                    fetchpriority="high"
+                    decoding="async"
+                    data-critical="true"
+            />
+        </div>
+        <div class="overflow-hidden">
+            <img
+                    src="{% static 'invitations/images/hero/hero_center.webp' %}"
+                    alt="Foto 2"
+                    class="block h-full w-full object-cover object-center"
+                    loading="eager"
+                    fetchpriority="high"
+                    decoding="async"
+                    data-critical="true"
+            />
+        </div>
+        <div class="overflow-hidden">
+            <img
+                    src="{% static 'invitations/images/hero/hero_right.webp' %}"
+                    alt="Foto 3"
+                    class="block h-full w-full object-cover object-center"
+                    loading="eager"
+                    fetchpriority="high"
+                    decoding="async"
+                    data-critical="true"
+            />
+        </div>
+    </div>
+
+    <div class="pointer-events-none absolute inset-0 bg-black/10 z-10"></div>
+
+    <div class="absolute top-0 left-0 right-0 z-[60]">
+        <div class="md:bg-black/20 md:backdrop-blur-sm md:pt-[env(safe-area-inset-top)]">
+            <div class="mx-auto max-w-6xl px-4 sm:px-6 py-1 md:py-3">
+                <div class="hidden md:flex items-center justify-center">
+                    <nav class="flex gap-x-10 font-seasons text-[12px] tracking-[.25em] text-white/90 uppercase">
+                        <a href="#itinerario" class="hover:text-white">Itinerario</a>
+                        <a href="#vestimenta" class="hover:text-white">Vestimenta</a>
+                        <a href="#hospedaje" class="hover:text-white">Hospedaje</a>
+                        <a href="#regalos" class="hover:text-white">Mesa de regalos</a>
+                        <a href="#rsvp" class="hover:text-white">RSVP</a>
+                    </nav>
+                </div>
+
+                <div class="md:hidden flex justify-end pt-[env(safe-area-inset-top)]">
+                    <button
+                            id="mobileMenuBtn"
+                            type="button"
+                            class="p-3 rounded-full bg-black/25 backdrop-blur-sm
+                               text-white/90 hover:text-white focus:outline-none"
+                            aria-label="Open menu"
+                            aria-controls="mobileMenu"
+                            aria-expanded="false"
+                    >
+                        <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                class="h-6 w-6"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                        >
+                            <path
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M4 6h16M4 12h16M4 18h16"
+                            />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="mobileMenu" class="md:hidden hidden">
+            <!-- Backdrop -->
+            <div
+                    id="mobileMenuBackdrop"
+                    class="fixed inset-0 bg-black/40 opacity-0 transition-opacity duration-200"
+            ></div>
+
+            <!-- Panel -->
+            <div class="fixed inset-0 overflow-hidden">
+                <div
+                        id="mobileMenuPanel"
+                        class="absolute inset-0 bg-brand-cream/85 backdrop-blur-sm
+                               opacity-0 transition-opacity duration-200
+                               flex flex-col h-[100vh] h-[100dvh]"
+                >
+                    <!-- Top bar -->
+                    <div
+                            class="max-w-6xl mx-auto w-full px-4 sm:px-6 py-4
+                                   flex items-center justify-between
+                                   pt-[calc(env(safe-area-inset-top)+1rem)]"
+                    >
+                        <div class="font-seasons text-[#2F3E46] text-xs tracking-[.25em] uppercase">
+                            Navegación
+                        </div>
+                        <button
+                                id="mobileMenuCloseBtn"
+                                type="button"
+                                class="p-2 rounded text-[#2F3E46] hover:opacity-70 focus:outline-none"
+                                aria-label="Close menu"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                 stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Center area -->
+                    <div class="flex-1 flex items-center justify-center px-6 pb-[calc(env(safe-area-inset-bottom)+1rem)]">
+                        <div
+                                class="text-center space-y-6 text-[#2F3E46]
+                                       tracking-[.25em] uppercase text-xs font-seasons"
+                        >
+                            <a class="block" href="#itinerario" data-close-menu>Itinerario</a>
+                            <a class="block" href="#vestimenta" data-close-menu>Vestimenta</a>
+                            <a class="block" href="#hospedaje" data-close-menu>Hospedaje</a>
+                            <a class="block" href="#regalos" data-close-menu>Mesa de regalos</a>
+                            <a class="block" href="#rsvp" data-close-menu>RSVP</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="pointer-events-none absolute inset-0 z-[40]">
+        <div class="absolute left-1/2 top-10 sm:top-14 -translate-x-1/2">
+            <img
+                    src="{% static 'invitations/images/hero/fecha.webp' %}"
+                    alt="Fecha"
+                    class="reveal
+                       w-[46vw] max-w-[220px]
+                       sm:w-[44vw] sm:max-w-[340px]
+                       md:w-[36vw] md:max-w-[320px]
+                       lg:w-[32vw] lg:max-w-[420px]
+                       mix-blend-screen opacity-95 select-none"
+                    data-delay="0"
+                    style="transition-duration: 950ms;"
+                    loading="eager"
+                    fetchpriority="high"
+                    decoding="async"
+                    data-critical="true"
+            />
+        </div>
+
+        <div class="absolute left-1/2 bottom-2 sm:bottom-8 -translate-x-1/2 w-full px-4 text-center">
+            <img
+                    src="{% static 'invitations/images/hero/nombres.webp' %}"
+                    alt="Ana y Luis"
+                    class="mx-auto
+                       w-[62vw] max-w-[260px]
+                       sm:w-[58vw] sm:max-w-[500px]
+                       md:w-[46vw] md:max-w-[520px]
+                       lg:w-[42vw] lg:max-w-[560px]
+                       mix-blend-screen opacity-95 select-none reveal"
+                    data-delay="180"
+                    style="transition-duration: 1100ms;"
+                    loading="eager"
+                    fetchpriority="high"
+                    decoding="async"
+                    data-critical="true"
+            />
+            <div
+                    class="mt-1 sm:mt-2 font-abhaya text-white/90 tracking-[0.45em]
+                       text-[9px] sm:text-xs uppercase drop-shadow reveal"
+                    data-delay="360"
+                    style="transition-duration: 1100ms;"
+            >
+                Tepoztlán, Morelos
+            </div>
+        </div>
+    </div>
+</header>

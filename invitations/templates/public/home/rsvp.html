@@ -1,0 +1,51 @@
+{% load static %}
+<section
+        id="rsvp"
+        class="relative scroll-mt-28 bg-embosed-flowers-texture overflow-hidden"
+>
+    <div class="relative mx-auto max-w-6xl px-4 sm:px-6 py-16 sm:py-20 text-center">
+        <div class="title-box mb-10 reveal">
+            <img
+                    src="{% static 'invitations/images/titles/rsvp.webp' %}"
+                    alt="RSVP – Confirma tu asistencia"
+                    class="title-img opacity-95 select-none"
+                    style="--title-scale: 1.30;"
+                    loading="lazy"
+                    decoding="async"
+            />
+        </div>
+
+        <div class="mt-8 flex justify-center reveal" data-delay="120">
+            <img
+                    src="{% static 'invitations/images/texts/rsvp_confirm.webp' %}"
+                    alt="Confirma mediante el link que te enviamos por whatsapp."
+                    class="w-[98%] xs:w-[96%] sm:w-[85%] md:w-[80%] max-w-5xl opacity-90 select-none"
+                    loading="lazy"
+                    decoding="async"
+            />
+        </div>
+
+
+        <img
+                class="mx-auto mt-10 w-20 sm:w-24 opacity-80 reveal"
+                data-delay="240"
+                src="{% static 'invitations/images/icons/logo.webp' %}"
+                alt="Logo"
+                loading="lazy"
+                decoding="async"
+        />
+
+        <div class="mt-10 reveal" data-delay="360">
+            <a
+                    href="#inicio"
+                    class="inline-flex items-center justify-center rounded-full
+                       px-10 sm:px-12 py-3.5 text-[11px]
+                       tracking-[.3em] uppercase
+                       border border-[#2F3E46]/20
+                       hover:bg-black/5 font-ansam"
+            >
+                Volver arriba
+            </a>
+        </div>
+    </div>
+</section>

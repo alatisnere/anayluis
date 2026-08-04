@@ -1,0 +1,26 @@
+<script>
+    const target = new Date("2026-11-21T15:00:00");
+    const pad = (n) => String(n).padStart(2, "0");
+
+    function tick() {
+        const now = new Date();
+        let diff = target - now;
+
+        if (diff < 0) {
+            diff = 0;
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hrs = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const min = Math.floor((diff / (1000 * 60)) % 60);
+        const sec = Math.floor((diff / 1000) % 60);
+
+        document.getElementById("cd-days").textContent = pad(days);
+        document.getElementById("cd-hrs").textContent = pad(hrs);
+        document.getElementById("cd-min").textContent = pad(min);
+        document.getElementById("cd-sec").textContent = pad(sec);
+    }
+
+    tick();
+    setInterval(tick, 1000);
+</script>
