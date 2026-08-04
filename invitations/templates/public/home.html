@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Ana & Luis{% endblock %}
+
+{# Preload only the most important hero assets #}
+{% block head_extra %}
+<link rel="preload" as="image" href="{% static 'invitations/images/hero/hero_center.webp' %}">
+<link rel="preload" as="image" href="{% static 'invitations/images/hero/nombres.webp' %}">
+<link rel="preload" as="image" href="{% static 'invitations/images/hero/fecha.webp' %}">
+{% endblock %}
+
+{# Premium loading overlay (home only) #}
+{% block page_overlay %}
+<div
+        id="page-loader"
+        role="status"
+        aria-live="polite"
+        aria-label="Cargando..."
+        class="fixed inset-0 z-[9999] flex items-center justify-center
+         bg-brand-cream/95 backdrop-blur-sm
+         opacity-100 transition-opacity duration-500 ease-out"
+        aria-hidden="false"
+>
+    <div class="flex flex-col items-center gap-4">
+        <div class="relative h-10 w-10">
+            <div class="absolute inset-0 rounded-full border-2 border-gray-200"></div>
+            <div class="absolute inset-0 rounded-full border-2 border-brand-tan border-t-transparent animate-spin"></div>
+        </div>
+        <div class="text-sm tracking-wide text-gray-700 font-ansam">
+            Cargando…
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+{% include "public/home/header.html" %}
+{% include "public/home/intro_and_countdown.html" %}
+{% include "public/home/photo_break_1.html" %}
+
+{% include "public/home/itinerario.html" %}
+{% include "public/home/photo_break_2.html" %}
+{% include "public/home/vestimenta.html" %}
+{% include "public/home/hospedaje.html" %}
+{% include "public/home/photo_break_3.html" %}
+{% include "public/home/mesa_de_regalos.html" %}
+{% include "public/home/rsvp.html" %}
+{% include "public/home/page_styles.html" %}
+{% include "public/home/mobile_menu_js.html" %}
+{% endblock %}
+
+{% block extra_js %}
+{% include "public/home/countdown_js.html" %}
+
+<style>
+    html.loader-open,
+    body.loader-open {
+      overflow: hidden;
+      height: 100%;
+      touch-action: none;
+    }
+    #page-loader.is-hidden {
+      pointer-events: none;
+    }
+</style>
+
+{% include "public/home/loader_js.html" %}
+{% endblock %}
