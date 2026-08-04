@@ -1,0 +1,138 @@
+{% load static %}
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8"/>
+
+    <!-- IMPORTANT for iPhone fullscreen + safe-area -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+
+    <title>{% block title %}Invitación{% endblock %}</title>
+
+    <link rel="icon" type="image/webp" href="{% static 'invitations/images/icons/logo.webp' %}">
+    <link rel="apple-touch-icon" href="{% static 'invitations/images/icons/logo.webp' %}">
+    <meta name="theme-color" content="#fbf9f6">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "brand-blue": "#5d7b9f",
+                        "brand-cream": "#fbf9f6",
+                        "brand-tan": "#977a63",
+                        "brand-white": "#ffffff",
+                    },
+                    fontFamily: {
+                        ansam: ["Montserrat", "ui-sans-serif", "system-ui", "sans-serif"],
+                        seasons: ["Playfair Display", "ui-serif", "Georgia", "serif"],
+                        abramo: ["Cormorant Garamond", "ui-serif", "Georgia", "serif"],
+                        abhaya: ["Abhaya Libre", "ui-serif", "Georgia", "serif"],
+                        moontime: ["Great Vibes", "cursive"],
+                    },
+                },
+            },
+        };
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+            href="https://fonts.googleapis.com/css2?
+        family=Montserrat:wght@300;400;500&
+        family=Playfair+Display:wght@400;500&
+        family=Cormorant+Garamond:wght@400;500&
+        family=Abhaya+Libre:wght@400;500;600&
+        family=Great+Vibes&
+        display=swap"
+            rel="stylesheet"
+    >
+
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* CRITICAL: iOS-safe scroll lock when mobile menu is open */
+        html.menu-open,
+        body.menu-open {
+            overflow: hidden;
+            height: 100%;
+            touch-action: none;
+        }
+
+        .bg-fixed-cover {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        @media (max-width: 768px) {
+            .bg-fixed-cover {
+                background-attachment: scroll;
+            }
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+
+    <style type="text/tailwindcss">
+        @layer components {
+            .section-title {
+                @apply text-center font-seasons font-normal uppercase
+                       text-[38px] sm:text-[44px]
+                       tracking-[.35em];
+            }
+
+            .section-kicker {
+                @apply font-seasons font-normal uppercase
+                       text-[34px] sm:text-[38px]
+                       tracking-[.38em];
+            }
+
+            .section-script {
+                @apply font-moontime leading-none
+                       text-[42px] sm:text-[50px]
+                       -mt-1.5 opacity-95;
+            }
+
+            .body-copy {
+                @apply font-abhaya
+                       text-sm sm:text-base
+                       leading-relaxed
+                       tracking-wide;
+            }
+
+            .body-copy-lg {
+                @apply font-abhaya
+                       text-base sm:text-lg
+                       leading-relaxed;
+            }
+        }
+    </style>
+
+    {# Home page can inject preload links etc here #}
+    {% block head_extra %}{% endblock %}
+</head>
+
+<body class="bg-brand-cream text-gray-900 antialiased">
+
+{# Home page loader overlay lives here #}
+{% block page_overlay %}{% endblock %}
+
+{% block content %}{% endblock %}
+{% block extra_js %}{% endblock %}
+
+</body>
+</html>

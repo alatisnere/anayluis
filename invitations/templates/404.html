@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Página no encontrada{% endblock %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-brand-cream px-4">
+    <div class="max-w-md text-center">
+        <div class="flex justify-center mb-5">
+            <img
+                    src="{% static 'invitations/images/icons/logo.webp' %}"
+                    alt="Ana & Luis"
+                    class="h-24 w-auto opacity-90"
+            >
+        </div>
+
+        <h1 class="text-2xl font-semibold text-brand-blue mb-3">
+            Invitación no encontrada
+        </h1>
+
+        <p class="text-sm text-brand-blue/70">
+            Este enlace no existe o la invitación fue eliminada.
+        </p>
+    </div>
+</div>
+{% endblock %}
