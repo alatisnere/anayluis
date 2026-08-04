@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Configuración | Dashboard{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-[#F6F4EC] pt-24">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 pb-16">
+        <div class="flex items-end justify-between gap-3">
+            <div>
+                <h1 class="text-2xl text-[#2F3E46]">Configuración inicial</h1>
+                <p class="text-sm text-[#2F3E46]/70 mt-1">
+                    Ajustes globales del RSVP.
+                </p>
+            </div>
+
+            <a
+                    href="{% url 'dashboard' %}"
+                    class="px-4 py-2 rounded-xl border border-black/15 hover:bg-black/5"
+            >
+                Volver
+            </a>
+        </div>
+
+        <div class="mt-6 bg-white/90 border border-[#6B86A5]/20 rounded-2xl p-5">
+            <form method="post" class="grid gap-6">
+                {% csrf_token %}
+
+                <div>
+                    <label class="block text-xs text-[#2F3E46]/70 mb-1">
+                        Contraseña de acceso (página pública)
+                    </label>
+
+                    {{ form.invite_password }}
+
+                    {% for e in form.invite_password.errors %}
+                    <div class="text-xs text-red-600 mt-1">{{ e }}</div>
+                    {% endfor %}
+
+                    <div class="text-[11px] text-[#2F3E46]/60 mt-1">
+                        Si está vacía, se mostrará “La página aún no ha sido configurada…”.
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs text-[#2F3E46]/70 mb-1">
+                        Fecha límite para responder RSVP
+                    </label>
+
+                    {{ form.rsvp_deadline }}
+
+                    {% for e in form.rsvp_deadline.errors %}
+                    <div class="text-xs text-red-600 mt-1">{{ e }}</div>
+                    {% endfor %}
+                </div>
+
+                <div>
+                    <label class="block text-xs text-[#2F3E46]/70 mb-1">
+                        Plantilla de texto (debe incluir {link})
+                    </label>
+
+                    {{ form.invite_message_template }}
+
+                    {% for e in form.invite_message_template.errors %}
+                    <div class="text-xs text-red-600 mt-1">{{ e }}</div>
+                    {% endfor %}
+
+                    <div class="text-[11px] text-[#2F3E46]/60 mt-1">
+                        Usa <span class="font-mono">{link}</span> donde quieras insertar el link del RSVP.
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-sm font-semibold text-[#2F3E46] mb-2">
+                        Mensajes a mostrar al responder RSVP
+                    </h2>
+
+                    <div class="grid gap-4">
+                        <div>
+                            <label class="block text-xs text-[#2F3E46]/70 mb-1">
+                                Aceptado
+                            </label>
+
+                            {{ form.confirm_text_yes }}
+
+                            {% for e in form.confirm_text_yes.errors %}
+                            <div class="text-xs text-red-600 mt-1">{{ e }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div>
+                            <label class="block text-xs text-[#2F3E46]/70 mb-1">
+                                Parcial
+                            </label>
+
+                            {{ form.confirm_text_partial }}
+
+                            {% for e in form.confirm_text_partial.errors %}
+                            <div class="text-xs text-red-600 mt-1">{{ e }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div>
+                            <label class="block text-xs text-[#2F3E46]/70 mb-1">
+                                Denegado
+                            </label>
+
+                            {{ form.confirm_text_no }}
+
+                            {% for e in form.confirm_text_no.errors %}
+                            <div class="text-xs text-red-600 mt-1">{{ e }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-sm font-semibold text-[#2F3E46] mb-2">
+                        Mensajes a mostrar cuando ya pasó la fecha límite
+                    </h2>
+
+                    <div class="grid gap-4">
+                        <div>
+                            <label class="block text-xs text-[#2F3E46]/70 mb-1">
+                                Aceptado
+                            </label>
+
+                            {{ form.rsvp_deadline_passed_text_yes }}
+
+                            {% for e in form.rsvp_deadline_passed_text_yes.errors %}
+                            <div class="text-xs text-red-600 mt-1">{{ e }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div>
+                            <label class="block text-xs text-[#2F3E46]/70 mb-1">
+                                Parcial
+                            </label>
+
+                            {{ form.rsvp_deadline_passed_text_partial }}
+
+                            {% for e in form.rsvp_deadline_passed_text_partial.errors %}
+                            <div class="text-xs text-red-600 mt-1">{{ e }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div>
+                            <label class="block text-xs text-[#2F3E46]/70 mb-1">
+                                Denegado
+                            </label>
+
+                            {{ form.rsvp_deadline_passed_text_no }}
+
+                            {% for e in form.rsvp_deadline_passed_text_no.errors %}
+                            <div class="text-xs text-red-600 mt-1">{{ e }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div>
+                            <label class="block text-xs text-[#2F3E46]/70 mb-1">
+                                Sin respuesta
+                            </label>
+
+                            {{ form.rsvp_deadline_passed_text_none }}
+
+                            {% for e in form.rsvp_deadline_passed_text_none.errors %}
+                            <div class="text-xs text-red-600 mt-1">{{ e }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs text-[#2F3E46]/70 mb-1">
+                        Texto de restricciones (para usuarios que aplique)
+                    </label>
+
+                    {{ form.restrictions_text }}
+
+                    {% for e in form.restrictions_text.errors %}
+                    <div class="text-xs text-red-600 mt-1">{{ e }}</div>
+                    {% endfor %}
+                </div>
+
+                <div class="flex justify-end gap-2 pt-2">
+                    <a
+                            href="{% url 'dashboard' %}"
+                            class="px-4 py-2 rounded-xl border border-black/15 hover:bg-black/5"
+                    >
+                        Cancelar
+                    </a>
+                    <button
+                            type="submit"
+                            class="px-4 py-2 rounded-xl bg-[#2F3E46] text-white hover:opacity-90"
+                    >
+                        Guardar
+                    </button>
+                </div>
+            </form>
+
+            {% if messages %}
+            <div class="mt-4 space-y-2">
+                {% for message in messages %}
+                <div class="text-sm text-[#2F3E46]">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

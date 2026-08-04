@@ -1,0 +1,157 @@
+<div class="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-4">
+    <div class="bg-white/90 border border-[#6B86A5]/20 rounded-2xl px-5 py-4">
+        <div class="text-center">
+            <div class="text-[10px] tracking-[.35em] text-[#6B86A5] uppercase">
+                Boletos asignados
+            </div>
+            <div class="mt-1 text-3xl font-light text-[#2F3E46]">
+                {{ ticket_counts.ASSIGNED }}
+            </div>
+        </div>
+
+        <div class="mt-3">
+            <div class="mx-auto w-44 h-44">
+                <canvas id="ticketsPie" width="176" height="176"></canvas>
+            </div>
+        </div>
+
+        <div class="mt-3 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-[#2F3E46]/80">
+            <div class="flex items-center gap-2">
+                <span
+                        class="inline-block w-9 h-3 rounded-sm border border-black/10"
+                        style="background:#bbf7d0;"
+                ></span>
+                <span>Aceptados: {{ ticket_counts.ACCEPTED }}</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span
+                        class="inline-block w-9 h-3 rounded-sm border border-black/10"
+                        style="background:#fecaca;"
+                ></span>
+                <span>Denegados: {{ ticket_counts.DENIED }}</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span
+                        class="inline-block w-9 h-3 rounded-sm border border-black/10"
+                        style="background:#e5e7eb;"
+                ></span>
+                <span>Pendientes: {{ ticket_counts.PENDING }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white/90 border border-[#6B86A5]/20 rounded-2xl px-5 py-4">
+        <div class="text-center">
+            <div class="text-[10px] tracking-[.35em] text-[#6B86A5] uppercase">
+                Familias
+            </div>
+            <div class="mt-1 text-3xl font-light text-[#2F3E46]">
+                {{ family_counts.TOTAL }}
+            </div>
+        </div>
+
+        <div class="mt-3">
+            <div class="mx-auto w-44 h-44">
+                <canvas id="familiesPie" width="176" height="176"></canvas>
+            </div>
+        </div>
+
+        <div class="mt-3 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-[#2F3E46]/80">
+            <div class="flex items-center gap-2">
+                <span
+                        class="inline-block w-9 h-3 rounded-sm border border-black/10"
+                        style="background:#bbf7d0;"
+                ></span>
+                <span>Aceptaron: {{ family_counts.ACCEPTED }}</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span
+                        class="inline-block w-9 h-3 rounded-sm border border-black/10"
+                        style="background:#fef08a;"
+                ></span>
+                <span>Parcial: {{ family_counts.PARTIAL }}</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span
+                        class="inline-block w-9 h-3 rounded-sm border border-black/10"
+                        style="background:#fecaca;"
+                ></span>
+                <span>Denegaron: {{ family_counts.DECLINED }}</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span
+                        class="inline-block w-9 h-3 rounded-sm border border-black/10"
+                        style="background:#e5e7eb;"
+                ></span>
+                <span>Pendiente: {{ family_counts.NO_RESPONSE }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+
+<script>
+    (function () {
+        const ticketsData = {
+            labels: ["Aceptados", "Denegados", "Pendientes"],
+            datasets: [
+                {
+                    data: [
+                        {{ ticket_counts.ACCEPTED|default:0 }},
+                        {{ ticket_counts.DENIED|default:0 }},
+                        {{ ticket_counts.PENDING|default:0 }},
+                    ],
+                    backgroundColor: ["#bbf7d0", "#fecaca", "#e5e7eb"],
+                    borderWidth: 0,
+                },
+            ],
+        };
+
+        const familiesData = {
+            labels: ["Aceptaron", "Parcial", "Denegaron", "Pendiente"],
+            datasets: [
+                {
+                    data: [
+                        {{ family_counts.ACCEPTED|default:0 }},
+                        {{ family_counts.PARTIAL|default:0 }},
+                        {{ family_counts.DECLINED|default:0 }},
+                        {{ family_counts.NO_RESPONSE|default:0 }},
+                    ],
+                    backgroundColor: ["#bbf7d0", "#fef08a", "#fecaca", "#e5e7eb"],
+                    borderWidth: 0,
+                },
+            ],
+        };
+
+        const baseOptions = {
+            responsive: false,
+            animation: false,
+            devicePixelRatio: window.devicePixelRatio || 1,
+            events: [],
+            plugins: {
+                legend: { display: false },
+                tooltip: { enabled: false },
+            },
+        };
+
+        const ticketsEl = document.getElementById("ticketsPie");
+        const familiesEl = document.getElementById("familiesPie");
+
+        if (ticketsEl) {
+            new Chart(ticketsEl, {
+                type: "pie",
+                data: ticketsData,
+                options: baseOptions,
+            });
+        }
+
+        if (familiesEl) {
+            new Chart(familiesEl, {
+                type: "pie",
+                data: familiesData,
+                options: baseOptions,
+            });
+        }
+    })();
+</script>

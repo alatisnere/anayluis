@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Dashboard | Ana & Luis{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-[#F6F4EC] pt-12">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 pb-16">
+        {% include "dashboard/_header.html" %}
+        {% include "dashboard/_kpis.html" %}
+        {% include "dashboard/_filters.html" %}
+        {% include "dashboard/_desktop_table.html" %}
+        {% include "dashboard/_mobile_cards.html" %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{% include "dashboard/_scripts.html" %}
+{% endblock %}

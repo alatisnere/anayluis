@@ -1,0 +1,150 @@
+<div class="mt-6 lg:hidden grid gap-4">
+    {% for row in rows %}
+    <div class="bg-white/90 border border-[#6B86A5]/20 rounded-2xl p-5">
+
+        <!-- Header -->
+        <div class="flex items-start justify-between gap-3">
+            <div>
+                <div class="font-semibold text-[#2F3E46]">
+                    {{ row.party.display_name }}
+                </div>
+
+                <div class="text-xs text-[#2F3E46]/70 mt-1">
+                    Boletos: {{ row.party.max_tickets }}
+
+                    {% if row.tickets_confirmed is not None %}
+                    · Confirmados: {{ row.tickets_confirmed }} / {{ row.party.max_tickets }}
+                    {% endif %}
+
+                    · Restricciones:
+                    {% if row.party.show_restrictions_text %}
+                    <span class="text-green-600 font-semibold">✓</span>
+                    {% else %}
+                    <span class="text-red-600 font-semibold">✕</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="shrink-0">
+                {% if row.status.key == "ACCEPTED" %}
+                <span class="px-2 py-1 rounded-full text-xs bg-green-100 text-green-800 whitespace-nowrap font-semibold">
+                    Aceptaron
+                </span>
+                {% elif row.status.key == "PARTIAL" %}
+                <span class="px-2 py-1 rounded-full text-xs bg-yellow-100 text-yellow-800 whitespace-nowrap font-semibold">
+                    Parcial
+                </span>
+                {% elif row.status.key == "DECLINED" %}
+                <span class="px-2 py-1 rounded-full text-xs bg-red-100 text-red-800 whitespace-nowrap font-semibold">
+                    Denegaron
+                </span>
+                {% else %}
+                <span class="px-2 py-1 rounded-full text-xs bg-gray-100 text-gray-700 whitespace-nowrap font-semibold">
+                    Pendiente
+                </span>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="mt-4 grid gap-3 justify-items-center text-center">
+
+            <!-- Copy actions -->
+            <div class="flex flex-wrap justify-center gap-2">
+                <button
+                        type="button"
+                        class="px-4 py-2 rounded-full text-xs font-semibold
+                           bg-yellow-100 text-yellow-800
+                           border border-yellow-200
+                           hover:bg-yellow-200"
+                        onclick="copyText('{{ row.rsvp_url|escapejs }}')"
+                >
+                    Copiar link RSVP
+                </button>
+
+                <button
+                        type="button"
+                        class="px-4 py-2 rounded-full text-xs font-semibold
+                           bg-yellow-100 text-yellow-800
+                           border border-yellow-200
+                           hover:bg-yellow-200"
+                        onclick="copyText(`{{ row.wa_text|escapejs }}`)"
+                >
+                    Copiar texto RSVP
+                </button>
+            </div>
+
+            <!-- WhatsApp -->
+            <div>
+                {% if row.wa_link %}
+                <a
+                        class="inline-flex items-center px-4 py-2 rounded-full
+                           bg-[#25D366] text-white
+                           hover:opacity-90 text-xs font-semibold"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href="{{ row.wa_link }}"
+                >
+                    WhatsApp
+                </a>
+                {% else %}
+                <span class="px-4 py-2 rounded-full bg-gray-200 text-gray-600 text-xs font-semibold">
+                    Sin teléfono
+                </span>
+                {% endif %}
+            </div>
+
+            <!-- Edit / Delete -->
+            <div class="flex flex-wrap justify-center gap-2">
+                <button
+                        type="button"
+                        class="px-4 py-2 rounded-full text-xs font-semibold
+                           bg-blue-100 text-blue-700
+                           border border-blue-200
+                           hover:bg-blue-200"
+                        onclick="openEditPartyModal(
+                        {{ row.party.id }},
+                        '{{ row.party.display_name|escapejs }}',
+                        {{ row.party.max_tickets }},
+                        '{{ row.party.phone_e164|default:''|escapejs }}',
+                        {{ row.party.show_restrictions_text|yesno:'true,false' }}
+                    )"
+                >
+                    Editar
+                </button>
+
+                <form
+                        method="post"
+                        action="{% url 'party_delete' row.party.id %}"
+                        onsubmit="return confirmDelete(event, '{{ row.party.display_name|escapejs }}');"
+                >
+                    {% csrf_token %}
+                    <button
+                            type="submit"
+                            class="px-4 py-2 rounded-full text-xs font-semibold
+                               bg-red-600 text-white
+                               hover:opacity-90"
+                    >
+                        Eliminar
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-3 text-[11px] text-[#2F3E46]/60 text-center">
+            Actualizó:
+            {% if row.updated_at %}
+            {{ row.updated_at|date:"j M Y, g:i a" }}
+            {% else %}
+            —
+            {% endif %}
+        </div>
+
+    </div>
+    {% empty %}
+    <div class="bg-white/90 border border-[#6B86A5]/20 rounded-2xl p-6 text-[#2F3E46]/70 text-center">
+        No hay registros.
+    </div>
+    {% endfor %}
+</div>

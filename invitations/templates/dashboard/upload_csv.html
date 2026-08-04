@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Cargar CSV | Dashboard{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-[#F6F4EC] pt-14">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 pb-16">
+
+        <div class="flex items-start justify-between gap-6 flex-wrap">
+            <div>
+                <h1 class="text-2xl text-[#2F3E46]">Agregar familias mediante CSV</h1>
+
+                <div class="mt-4 text-sm text-[#2F3E46]/80 space-y-1">
+                    <p><strong>Cómo funciona:</strong></p>
+                    <ol class="list-decimal ml-5 space-y-1">
+                        <li>Descarga la plantilla y completa los datos.</li>
+                        <li>Guarda el archivo como <strong>.csv</strong> (UTF-8 recomendado).</li>
+                        <li>Selecciona el archivo y presiona <strong>Cargar archivo</strong>.</li>
+                    </ol>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex flex-col gap-2 items-end">
+                 <a
+                        href="{% url 'dashboard' %}"
+                        class="px-4 py-2 rounded-full text-sm
+                           bg-white text-[#2F3E46]
+                           border border-black/15
+                           hover:bg-black/5"
+                >
+                    Volver
+                </a>
+                <a
+                        href="{% url 'party_template_xlsx' %}"
+                        class="px-4 py-2 rounded-full text-sm
+                           bg-green-100 text-green-700
+                           border border-green-200
+                           hover:bg-green-200"
+                >
+                    Descargar plantilla
+                </a>
+
+            </div>
+        </div>
+
+        <div class="mt-6 bg-white/90 border border-[#6B86A5]/20 rounded-2xl p-5">
+            <form method="post" enctype="multipart/form-data" class="grid gap-4">
+                {% csrf_token %}
+
+                <div>
+                    <label class="block text-xs text-[#2F3E46]/70 mb-1">
+                        Archivo CSV
+                    </label>
+                    <input
+                            type="file"
+                            name="file"
+                            accept=".csv"
+                            required
+                            class="w-full border border-black/10 rounded-xl px-4 py-2 bg-white"
+                    />
+                </div>
+
+                <button
+                        type="submit"
+                        class="px-4 py-2 rounded-xl bg-[#2F3E46] text-white hover:opacity-90"
+                >
+                    Cargar archivo
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% if messages %}
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        {% for message in messages %}
+            {% if message.tags == "success" %}
+                if (typeof Swal !== "undefined") {
+                    Swal.fire({
+                        title: "CSV procesado",
+                        text: "{{ message|escapejs }}",
+                        icon: "success",
+                        confirmButtonText: "OK",
+                        confirmButtonColor: "#2F3E46",
+                    });
+                }
+            {% endif %}
+        {% endfor %}
+    });
+</script>
+{% endif %}
+{% endblock %}

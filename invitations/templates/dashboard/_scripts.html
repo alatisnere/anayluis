@@ -1,0 +1,115 @@
+<script>
+    async function copyText(text) {
+        try {
+            await navigator.clipboard.writeText(text);
+            toast("Copiado ✅");
+        } catch (e) {
+            const ta = document.createElement("textarea");
+            ta.value = text;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand("copy");
+            ta.remove();
+            toast("Copiado ✅");
+        }
+    }
+
+    function toast(msg) {
+        const el = document.createElement("div");
+        el.textContent = msg;
+        el.className =
+            "fixed bottom-5 left-1/2 -translate-x-1/2 bg-black/80 text-white " +
+            "text-sm px-4 py-2 rounded-full z-50";
+        document.body.appendChild(el);
+
+        setTimeout(() => el.remove(), 1400);
+    }
+
+    function openCreatePartyModal() {
+        const modal = document.getElementById("createPartyModal");
+        if (!modal) return;
+        modal.classList.remove("hidden");
+    }
+
+    function closeCreatePartyModal() {
+        const modal = document.getElementById("createPartyModal");
+        if (!modal) return;
+        modal.classList.add("hidden");
+    }
+
+    function openEditPartyModal(id, displayName, maxTickets, phoneE164, showRestrictions) {
+        const modal = document.getElementById("editPartyModal");
+        const form = document.getElementById("editPartyForm");
+        if (!modal || !form) return;
+
+        form.action = `/dashboard/party/${id}/update/`;
+
+        const nameEl = document.getElementById("edit_display_name");
+        const ticketsEl = document.getElementById("edit_max_tickets");
+        const phoneEl = document.getElementById("edit_phone_e164");
+        const restrictionsEl = document.getElementById("edit_show_restrictions_text");
+
+        if (nameEl) nameEl.value = displayName || "";
+        if (ticketsEl) ticketsEl.value = maxTickets || 1;
+        if (phoneEl) phoneEl.value = phoneE164 || "";
+        if (restrictionsEl) restrictionsEl.checked = !!showRestrictions;
+
+        modal.classList.remove("hidden");
+    }
+
+    function closeEditPartyModal() {
+        const modal = document.getElementById("editPartyModal");
+        if (!modal) return;
+        modal.classList.add("hidden");
+    }
+
+    function confirmDelete(e, name) {
+        e.preventDefault();
+
+        if (typeof Swal === "undefined") {
+            return false;
+        }
+
+        Swal.fire({
+            title: "¿Eliminar invitado?",
+            text: `Se eliminará "${name}" y su RSVP (si existe).`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "Cancelar",
+            confirmButtonColor: "#dc2626",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                e.target.submit();
+            }
+        });
+
+        return false;
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const msgs = [
+            {% if messages %}
+                {% for message in messages %}
+                    { tags: "{{ message.tags|escapejs }}", text: "{{ message|escapejs }}" },
+                {% endfor %}
+            {% endif %}
+        ];
+
+        const csvSuccess = msgs.find(
+            (m) =>
+                (m.tags || "").includes("success") &&
+                (m.text || "").startsWith("CSV procesado.")
+        );
+
+        if (csvSuccess && typeof Swal !== "undefined") {
+            Swal.fire({
+                title: "Carga completa ✅",
+                text: csvSuccess.text,
+                icon: "success",
+                confirmButtonText: "OK",
+                confirmButtonColor: "#2F3E46",
+            });
+        }
+    });
+</script>

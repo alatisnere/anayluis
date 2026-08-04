@@ -1,0 +1,102 @@
+<form
+        method="get"
+        class="mt-6 bg-white/90 border border-[#6B86A5]/20 rounded-2xl p-4 sm:p-5"
+>
+    <div class="flex flex-col md:flex-row gap-3 md:items-center">
+        <input
+                name="q"
+                value="{{ q }}"
+                placeholder="Buscar familia..."
+                class="w-full md:flex-1 border border-black/10 rounded-xl px-4 py-2 bg-white"
+        />
+
+        <select
+                name="status"
+                class="w-full md:w-56 border border-black/10 rounded-xl px-4 py-2 bg-white"
+        >
+            <option value="" {% if not status_filter %}selected{% endif %}>
+                Todos
+            </option>
+            {% for key, label in statuses %}
+            <option
+                    value="{{ key }}"
+                    {% if status_filter == key %}selected{% endif %}
+            >
+                {{ label }}
+            </option>
+            {% endfor %}
+        </select>
+
+        <select
+                name="per_page"
+                class="w-full md:w-40 border border-black/10 rounded-xl px-4 py-2 bg-white"
+        >
+            {% for n in per_page_choices %}
+            <option
+                    value="{{ n }}"
+                    {% if per_page == n %}selected{% endif %}
+            >
+                {{ n }} / pág
+            </option>
+            {% endfor %}
+        </select>
+
+        <div class="flex gap-2">
+            <button
+                    type="submit"
+                    class="px-4 py-2 rounded-xl bg-[#2F3E46] text-white hover:opacity-90"
+            >
+                Filtrar
+            </button>
+            <a
+                    href="{% url 'dashboard' %}"
+                    class="px-4 py-2 rounded-xl border border-black/15 hover:bg-black/5"
+            >
+                Limpiar
+            </a>
+        </div>
+    </div>
+</form>
+
+{% if page_obj %}
+<div class="mt-3 flex items-center justify-between text-xs text-[#2F3E46]/70">
+    <div>
+        Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+        · {{ page_obj.paginator.count }} familias
+    </div>
+
+    <div class="flex items-center gap-2">
+        {% if page_obj.has_previous %}
+        <a
+                class="px-3 py-1 rounded-full border border-black/15 hover:bg-black/5"
+                href="?q={{ q|urlencode }}&status={{ status_filter|urlencode }}&per_page={{ per_page }}&page={{ page_obj.previous_page_number }}"
+        >
+            Anterior
+        </a>
+        {% else %}
+        <span
+                class="px-3 py-1 rounded-full border border-black/10
+                   text-black/30 cursor-not-allowed"
+        >
+            Anterior
+        </span>
+        {% endif %}
+
+        {% if page_obj.has_next %}
+        <a
+                class="px-3 py-1 rounded-full border border-black/15 hover:bg-black/5"
+                href="?q={{ q|urlencode }}&status={{ status_filter|urlencode }}&per_page={{ per_page }}&page={{ page_obj.next_page_number }}"
+        >
+            Siguiente
+        </a>
+        {% else %}
+        <span
+                class="px-3 py-1 rounded-full border border-black/10
+                   text-black/30 cursor-not-allowed"
+        >
+            Siguiente
+        </span>
+        {% endif %}
+    </div>
+</div>
+{% endif %}

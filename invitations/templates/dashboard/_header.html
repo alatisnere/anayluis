@@ -1,0 +1,287 @@
+<!-- Header -->
+<div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+    <div>
+        <h1 class="text-3xl font-wedding text-[#2F3E46] tracking-wide">Dashboard</h1>
+
+        <p class="text-sm text-[#2F3E46]/70 mt-1">
+            Control de invitaciones y RSVP
+        </p>
+
+        <p class="text-xs text-[#2F3E46]/60 mt-1">
+            {{ rsvp_countdown_text }} · {{ rsvp_deadline_date|date:"j M Y, g:i a" }}
+        </p>
+    </div>
+
+    <!-- Buttons -->
+    <div class="flex flex-col gap-2 items-end">
+        <!-- Row 1: global -->
+        <div class="flex flex-wrap gap-2">
+            <a
+                    href="{% url 'app_config' %}"
+                    class="px-4 py-2 rounded-full text-sm font-semibold
+                       bg-gray-100 text-gray-700
+                       border border-gray-200
+                       hover:bg-gray-200"
+            >
+                Configuración
+            </a>
+
+            <a
+                    href="{% url 'logout' %}"
+                    class="px-4 py-2 rounded-full text-sm font-semibold
+                       bg-red-100 text-red-700
+                       border border-red-200
+                       hover:bg-red-200"
+            >
+                Cerrar sesión
+            </a>
+        </div>
+
+        <!-- Row 2: data actions -->
+        <div class="flex flex-wrap gap-2">
+            <button
+                    type="button"
+                    onclick="openCreatePartyModal()"
+                    class="px-4 py-2 rounded-full text-sm font-semibold
+                       bg-green-100 text-green-700
+                       border border-green-200
+                       hover:bg-green-200"
+            >
+                + Agregar familia
+            </button>
+
+            <a
+                    href="{% url 'party_upload_csv' %}"
+                    class="px-4 py-2 rounded-full text-sm font-semibold
+                       bg-green-100 text-green-700
+                       border border-green-200
+                       hover:bg-green-200"
+            >
+                + Agregar con CSV
+            </a>
+
+            <a
+                    href="{% url 'export_csv' %}"
+                    class="px-4 py-2 rounded-full text-sm font-semibold
+                       bg-yellow-100 text-yellow-800
+                       border border-yellow-200
+                       hover:bg-yellow-200"
+            >
+                Exportar CSV
+            </a>
+        </div>
+
+        <!-- Row 3: utility -->
+        <div class="flex flex-wrap gap-2 justify-end">
+            <button
+                    type="button"
+                    onclick="copyText('{{ request.scheme }}://{{ request.get_host }}/')"
+                    class="px-4 py-2 rounded-full text-sm font-semibold
+               bg-blue-100 text-blue-700
+               border border-blue-200
+               hover:bg-blue-200"
+            >
+                Copiar link página pública
+            </button>
+
+            <button
+                    type="button"
+                    onclick="copyText('{{ request.scheme }}://{{ request.get_host }}/?password={{ config.invite_password|urlencode }}')"
+                    class="px-4 py-2 rounded-full text-sm font-semibold
+               bg-blue-100 text-blue-700
+               border border-blue-200
+               hover:bg-blue-200"
+            >
+                Copiar link página pública desbloqueada
+            </button>
+
+            <button
+                    type="button"
+                    onclick="window.location.reload()"
+                    class="px-4 py-2 rounded-full text-sm font-semibold
+               bg-white text-[#2F3E46]
+               border border-black/15
+               hover:bg-black/5"
+            >
+                Actualizar página
+            </button>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- Create Party Modal -->
+<div id="createPartyModal" class="fixed inset-0 hidden z-50">
+    <div class="absolute inset-0 bg-black/40" onclick="closeCreatePartyModal()"></div>
+
+    <div class="relative mx-auto mt-24 w-[92%] max-w-lg bg-white rounded-2xl border border-black/10 p-5">
+        <div class="flex items-start justify-between gap-4">
+            <div>
+                <div class="text-lg font-semibold text-[#2F3E46]">Agregar familia</div>
+                <div class="text-xs text-[#2F3E46]/70 mt-1">
+                    Crea una sola familia/invitación.
+                </div>
+            </div>
+
+            <button
+                    type="button"
+                    class="text-[#2F3E46]/70 hover:text-[#2F3E46]"
+                    onclick="closeCreatePartyModal()"
+            >
+                ✕
+            </button>
+        </div>
+
+        <form class="mt-4 grid gap-3" method="post" action="{% url 'party_create' %}">
+            {% csrf_token %}
+
+            <div>
+                <label class="block text-xs text-[#2F3E46]/70 mb-1">Familia</label>
+                <input
+                        name="display_name"
+                        required
+                        class="w-full border border-black/10 rounded-xl px-4 py-2 bg-white"
+                />
+            </div>
+
+            <div>
+                <label class="block text-xs text-[#2F3E46]/70 mb-1">Boletos</label>
+                <input
+                        name="max_tickets"
+                        type="number"
+                        min="1"
+                        required
+                        class="w-full border border-black/10 rounded-xl px-4 py-2 bg-white"
+                />
+            </div>
+
+            <div>
+                <label class="block text-xs text-[#2F3E46]/70 mb-1">Teléfono (opcional)</label>
+                <input
+                        name="phone_e164"
+                        placeholder="521XXXXXXXXXX (sin +)"
+                        class="w-full border border-black/10 rounded-xl px-4 py-2 bg-white"
+                />
+            </div>
+
+            <div class="flex items-center gap-2">
+                <input
+                        id="id_show_restrictions_text"
+                        name="show_restrictions_text"
+                        type="checkbox"
+                        class="h-4 w-4 rounded border-black/20"
+                />
+                <label for="id_show_restrictions_text" class="text-xs text-[#2F3E46]/80">
+                    Mostrar aviso de restricciones
+                </label>
+            </div>
+
+            <div class="flex justify-end gap-2 pt-2">
+                <button
+                        type="button"
+                        class="px-4 py-2 rounded-xl border border-black/15 hover:bg-black/5"
+                        onclick="closeCreatePartyModal()"
+                >
+                    Cancelar
+                </button>
+
+                <button
+                        type="submit"
+                        class="px-4 py-2 rounded-xl bg-[#2F3E46] text-white hover:opacity-90"
+                >
+                    Guardar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Party Modal -->
+<div id="editPartyModal" class="fixed inset-0 hidden z-50">
+    <div class="absolute inset-0 bg-black/40" onclick="closeEditPartyModal()"></div>
+
+    <div class="relative mx-auto mt-24 w-[92%] max-w-lg bg-white rounded-2xl border border-black/10 p-5">
+        <div class="flex items-start justify-between gap-4">
+            <div>
+                <div class="text-lg font-semibold text-[#2F3E46]">Editar familia</div>
+                <div class="text-xs text-[#2F3E46]/70 mt-1">
+                    Actualiza los datos de una familia/invitación.
+                </div>
+            </div>
+
+            <button
+                    type="button"
+                    class="text-[#2F3E46]/70 hover:text-[#2F3E46]"
+                    onclick="closeEditPartyModal()"
+            >
+                ✕
+            </button>
+        </div>
+
+        <form id="editPartyForm" class="mt-4 grid gap-3" method="post" action="">
+            {% csrf_token %}
+
+            <div>
+                <label class="block text-xs text-[#2F3E46]/70 mb-1">Familia</label>
+                <input
+                        id="edit_display_name"
+                        name="display_name"
+                        required
+                        class="w-full border border-black/10 rounded-xl px-4 py-2 bg-white"
+                />
+            </div>
+
+            <div>
+                <label class="block text-xs text-[#2F3E46]/70 mb-1">Boletos</label>
+                <input
+                        id="edit_max_tickets"
+                        name="max_tickets"
+                        type="number"
+                        min="1"
+                        required
+                        class="w-full border border-black/10 rounded-xl px-4 py-2 bg-white"
+                />
+            </div>
+
+            <div>
+                <label class="block text-xs text-[#2F3E46]/70 mb-1">Teléfono (opcional)</label>
+                <input
+                        id="edit_phone_e164"
+                        name="phone_e164"
+                        placeholder="521XXXXXXXXXX (sin +)"
+                        class="w-full border border-black/10 rounded-xl px-4 py-2 bg-white"
+                />
+            </div>
+
+            <div class="flex items-center gap-2">
+                <input
+                        id="edit_show_restrictions_text"
+                        name="show_restrictions_text"
+                        type="checkbox"
+                        class="h-4 w-4 rounded border-black/20"
+                />
+                <label for="edit_show_restrictions_text" class="text-xs text-[#2F3E46]/80">
+                    Mostrar aviso de restricciones
+                </label>
+            </div>
+
+            <div class="flex justify-end gap-2 pt-2">
+                <button
+                        type="button"
+                        class="px-4 py-2 rounded-xl border border-black/15 hover:bg-black/5"
+                        onclick="closeEditPartyModal()"
+                >
+                    Cancelar
+                </button>
+
+                <button
+                        type="submit"
+                        class="px-4 py-2 rounded-xl bg-[#2F3E46] text-white hover:opacity-90"
+                >
+                    Guardar cambios
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
