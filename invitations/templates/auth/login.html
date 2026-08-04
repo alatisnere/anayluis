@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <title>Login</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen bg-[#F6F4EC] flex items-center justify-center px-4">
+<div class="w-full max-w-md">
+    <div class="bg-white/90 border border-[#6B86A5]/20 rounded-2xl p-6 sm:p-7">
+        <h1 class="text-3xl font-semibold text-[#2F3E46]">Login</h1>
+        <p class="text-sm text-[#2F3E46]/70 mt-1">
+            Acceso exclusivo para administradores.
+        </p>
+
+        <form method="post" class="mt-6 grid gap-4">
+            {% csrf_token %}
+
+            <div>
+                <label class="block text-xs text-[#2F3E46]/70 mb-1">Username</label>
+                <input
+                        name="username"
+                        required
+                        autocomplete="username"
+                        class="w-full border border-black/10 rounded-xl px-4 py-2 bg-white"
+                >
+            </div>
+
+            <div>
+                <label class="block text-xs text-[#2F3E46]/70 mb-1">Password</label>
+
+                <div class="relative">
+                    <input
+                            id="passwordInput"
+                            type="password"
+                            name="password"
+                            required
+                            autocomplete="current-password"
+                            class="w-full border border-black/10 rounded-xl px-4 py-2 pr-12 bg-white"
+                    >
+
+                    <button
+                            id="togglePassword"
+                            type="button"
+                            class="absolute right-2 top-1/2 -translate-y-1/2
+                                   h-9 w-9 rounded-lg border border-black/10
+                                   bg-white hover:bg-black/5
+                                   flex items-center justify-center"
+                            aria-label="Mostrar contraseña"
+                    >
+                        <!-- Eye -->
+                        <svg id="eyeOpen" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" stroke-width="2"
+                             class="h-5 w-5 text-[#2F3E46]/70">
+                            <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+
+                        <!-- Eye off -->
+                        <svg id="eyeClosed" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                             fill="none" stroke="currentColor" stroke-width="2"
+                             class="h-5 w-5 text-[#2F3E46]/70 hidden">
+                            <path d="M3 3l18 18"/>
+                            <path d="M10.58 10.58a2 2 0 002.83 2.83"/>
+                            <path d="M9.88 5.09A10.43 10.43 0 0112 5c6.5 0 10 7 10 7a17.64 17.64 0 01-4.2 5.2"/>
+                            <path d="M6.11 6.11A17.64 17.64 0 002 12s3.5 7 10 7a10.43 10.43 0 004.12-.8"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            {% if error %}
+            <div class="text-sm text-red-600 font-semibold">
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <button
+                    type="submit"
+                    class="mt-1 px-4 py-2 rounded-xl bg-[#2F3E46] text-white hover:opacity-90 font-semibold"
+            >
+                Entrar
+            </button>
+        </form>
+    </div>
+</div>
+
+<script>
+    (function () {
+        const input = document.getElementById("passwordInput");
+        const toggle = document.getElementById("togglePassword");
+        const eyeOpen = document.getElementById("eyeOpen");
+        const eyeClosed = document.getElementById("eyeClosed");
+
+        if (!input || !toggle) return;
+
+        toggle.addEventListener("click", () => {
+            const isHidden = input.type === "password";
+            input.type = isHidden ? "text" : "password";
+            eyeOpen.classList.toggle("hidden", isHidden);
+            eyeClosed.classList.toggle("hidden", !isHidden);
+        });
+    })();
+</script>
+</body>
+</html>
