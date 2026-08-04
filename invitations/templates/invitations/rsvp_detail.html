@@ -1,0 +1,318 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Confirmación | Ana & Luis{% endblock %}
+
+{% block content %}
+<section class="min-h-screen bg-brand-cream relative overflow-hidden">
+    <div
+            class="absolute inset-0 pointer-events-none opacity-70"
+            style="
+            background-image: url({% static 'invitations/images/textures/textura_3.webp' %});
+            background-size: cover;
+            background-position: center;
+        "
+    ></div>
+
+    <div class="relative mx-auto max-w-5xl px-4 sm:px-6 py-16 sm:py-20">
+        <div class="mx-auto w-full max-w-3xl">
+            <div
+                    class="relative bg-white/80 backdrop-blur-sm
+                       border-[6px] border-brand-blue/75
+                       rounded-[26px] overflow-hidden"
+            >
+                <div class="grid grid-cols-[90px_1fr] sm:grid-cols-[110px_1fr]">
+                    <div class="flex items-center justify-center border-r border-brand-blue/20">
+                        <img
+                                src="{% static 'invitations/images/titles/rsvp_side.webp' %}"
+                                alt="RSVP"
+                                class="h-[320px] sm:h-[380px] w-auto opacity-90 select-none"
+                        >
+                    </div>
+
+                    <div class="p-6 sm:p-10">
+                        <div class="text-center">
+                            <div class="flex justify-center mb-4">
+                                <img
+                                        src="{% static 'invitations/images/icons/logo.webp' %}"
+                                        alt="Ana & Luis"
+                                        class="h-12 sm:h-14 w-auto opacity-90"
+                                >
+                            </div>
+
+                            <div class="mx-auto w-20 h-px bg-brand-blue/30 mb-5"></div>
+
+                            <div
+                                    class="font-ansam text-[10px] sm:text-[11px]
+                                       tracking-[.35em] uppercase text-brand-blue/60"
+                            >
+                                Invitación para
+                            </div>
+
+                            <div class="mt-3 font-abhaya text-[22px] sm:text-[28px] text-brand-blue">
+                                {{ party.display_name }}
+                            </div>
+                        </div>
+
+                        {% if deadline_passed and deadline_message %}
+                        <div class="mt-6 text-center text-xs font-semibold text-brand-blue/55 max-w-md mx-auto">
+                            {{ deadline_message|linebreaksbr }}
+                        </div>
+                        {% endif %}
+
+                        {% if show_summary %}
+                        {% elif deadline_passed %}
+                        <div class="mt-8 text-center">
+                            <div
+                                    class="font-seasons uppercase tracking-[.32em]
+                                       text-brand-blue/60 text-[18px] sm:text-[22px]"
+                            >
+                                No. Boletos confirmados
+                            </div>
+                            <div
+                                    class="mt-3 font-seasons text-brand-blue/80
+                                       text-[56px] sm:text-[76px] leading-none"
+                            >
+                                0
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="mt-8 text-center">
+                            <div
+                                    class="font-seasons uppercase tracking-[.32em]
+                                       text-brand-blue/60 text-[18px] sm:text-[22px]"
+                            >
+                                No. Boletos asignados
+                            </div>
+                            <div
+                                    class="mt-3 font-seasons text-brand-blue/80
+                                       text-[56px] sm:text-[76px] leading-none"
+                            >
+                                {{ party.max_tickets }}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <form method="post" class="mt-10" novalidate>
+                            {% csrf_token %}
+
+                            <div class="space-y-12">
+                                {% if show_summary %}
+                                <div class="text-center">
+                                    <div
+                                            class="font-seasons uppercase tracking-[.32em]
+                                               text-brand-blue/60 text-[18px] sm:text-[22px]"
+                                    >
+                                        No. Boletos confirmados
+                                    </div>
+                                    <div
+                                            class="mt-3 font-seasons text-brand-blue/80
+                                               text-[56px] sm:text-[76px] leading-none"
+                                    >
+                                        {{ confirmed_tickets }}
+                                    </div>
+                                </div>
+
+                                {% elif deadline_passed %}
+                                <div></div>
+
+                                {% else %}
+                                <div class="text-center">
+                                    <div
+                                            class="font-ansam text-[10px] sm:text-[11px]
+                                               tracking-[.35em] uppercase text-brand-blue/60"
+                                    >
+                                        Asistencia
+                                    </div>
+                                    <div class="mt-2 font-abhaya text-brand-blue text-[16px] sm:text-[18px]">
+                                        ¿Asistirás?
+                                    </div>
+                                    <div class="mt-5 inline-block text-left text-brand-blue/80">
+                                        {{ form.response }}
+                                    </div>
+                                </div>
+
+                                <div id="tickets-section" class="hidden text-center">
+                                    <div
+                                            class="font-ansam text-[10px] sm:text-[11px]
+                                               tracking-[.35em] uppercase text-brand-blue/60"
+                                    >
+                                        Boletos confirmados
+                                    </div>
+
+                                    <label class="mt-2 block font-abhaya text-brand-blue text-[16px] sm:text-[18px]">
+                                        ¿Con cuántos boletos asistes?
+                                    </label>
+
+                                    <div class="mt-5 flex justify-center">
+                                        <div class="relative w-full max-w-[260px]">
+                                            <select
+                                                    id="ticketsSelect"
+                                                    class="appearance-none w-full
+                                                       rounded-full border-2 border-brand-blue/60
+                                                       bg-white/70
+                                                       px-7 pr-14 py-3.5
+                                                       text-center font-ansam
+                                                       text-[11px] sm:text-[12px]
+                                                       tracking-[.3em]
+                                                       focus:outline-none
+                                                       focus:ring-4 focus:ring-brand-blue/20"
+                                            >
+                                                <option value="">Elige una opción</option>
+                                                {% for i in ""|ljust:party.max_tickets %}
+                                                <option value="{{ forloop.counter }}">
+                                                    {{ forloop.counter }}
+                                                </option>
+                                                {% endfor %}
+                                            </select>
+
+                                            <span
+                                                    class="pointer-events-none absolute right-5 top-1/2
+                                                       -translate-y-1/2 text-brand-blue/60"
+                                            >
+                                                <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        class="h-4 w-4"
+                                                        fill="none"
+                                                        viewBox="0 0 24 24"
+                                                        stroke="currentColor"
+                                                >
+                                                    <path
+                                                            stroke-linecap="round"
+                                                            stroke-linejoin="round"
+                                                            stroke-width="2"
+                                                            d="M19 9l-7 7-7-7"
+                                                    />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="hidden">
+                                        {{ form.tickets_confirmed }}
+                                    </div>
+                                </div>
+                                {% endif %}
+
+                                <div class="pt-2 flex flex-col items-center gap-4">
+                                    {% if party.show_restrictions_text and config.restrictions_text and not show_summary and not deadline_passed %}
+                                    <div class="text-center text-xs text-brand-blue/55 max-w-md">
+                                        <strong>{{ config.restrictions_text|linebreaksbr }}</strong>
+                                    </div>
+                                    {% endif %}
+
+                                    {% if not show_summary and not deadline_passed %}
+                                    <button
+                                            id="submitBtn"
+                                            type="submit"
+                                            class="flex items-center justify-center text-center
+                                               rounded-full px-12 sm:px-20 py-3.5
+                                               text-[11px] tracking-[.35em] uppercase
+                                               border-2 border-brand-blue/60
+                                               text-brand-blue bg-white/60
+                                               hover:bg-white/80 transition
+                                               font-ansam
+                                               disabled:opacity-50
+                                               disabled:cursor-not-allowed"
+                                    >
+                                        Guardar respuesta
+                                    </button>
+                                    {% endif %}
+
+                                    {% if messages %}
+                                    {% for message in messages %}
+                                    <div class="text-center font-abhaya text-[15px] text-brand-blue">
+                                        {{ message }}
+                                    </div>
+                                    {% endfor %}
+                                    {% endif %}
+
+                                    {% if show_summary and not deadline_passed %}
+                                    <a
+                                            href="{% url 'rsvp_detail' code=party.code %}?edit=1"
+                                            class="inline-flex items-center justify-center
+                                               rounded-full px-6 sm:px-10 py-3
+                                               text-[10px]
+                                               tracking-[.18em] sm:tracking-[.32em]
+                                               uppercase whitespace-nowrap
+                                               border border-brand-blue/50
+                                               text-brand-blue/80 bg-white/40
+                                               hover:bg-white/70 transition
+                                               font-ansam"
+                                    >
+                                        Actualizar respuesta
+                                    </a>
+
+                                    <div class="text-center text-xs text-brand-blue/55 max-w-md">
+                                        Puedes volver a este enlace hasta el
+                                        {{ config.rsvp_deadline|date:"j \\d\\e F \\d\\e Y" }}
+                                        para realizar cambios.
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    input[type="radio"] {
+        accent-color: #5d7b9f;
+    }
+
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    li {
+        margin: 0.35rem 0;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    (function () {
+        const showSummary = {{ show_summary|yesno:"true,false" }};
+        const deadlinePassed = {{ deadline_passed|yesno:"true,false" }};
+        if (showSummary || deadlinePassed) return;
+
+        const ticketsSection = document.getElementById("tickets-section");
+        const ticketsSelect = document.getElementById("ticketsSelect");
+        const hiddenInput = document.querySelector('[name="tickets_confirmed"]');
+        const submitBtn = document.getElementById("submitBtn");
+        const yesRadio = document.querySelector(
+            'input[name="response"][value="YES"]'
+        );
+
+        function update() {
+            if (!yesRadio || !yesRadio.checked) {
+                ticketsSection.classList.add("hidden");
+                if (hiddenInput) hiddenInput.value = 0;
+                if (submitBtn) submitBtn.disabled = false;
+                return;
+            }
+
+            ticketsSection.classList.remove("hidden");
+            if (submitBtn) submitBtn.disabled = !ticketsSelect.value;
+        }
+
+        ticketsSelect?.addEventListener("change", () => {
+            if (hiddenInput) hiddenInput.value = ticketsSelect.value || 0;
+            update();
+        });
+
+        document
+            .querySelectorAll('input[name="response"]')
+            .forEach((r) => r.addEventListener("change", update));
+
+        update();
+    })();
+</script>
+{% endblock %}
